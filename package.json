@@ -1,6 +1,6 @@
 {
   "name": "xml-reader",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "XML Reader and Parser",
   "main": "index.js",
   "scripts": {
