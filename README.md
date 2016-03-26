@@ -102,6 +102,33 @@ reader.on('done', data => console.log(data.children.length));
 reader.parse(xml);
 ```
 
+### Stream mode (chunked)
+
+In this example we are calling multiple times to the parser. This is useful if your XML document is a stream that comes from a TCP socket or WebSocket (for example XMPP streams).
+
+Simply feed the parser with the data as it arrives. As you can see, the result is exactly the same as the previous one.
+
+```javascript
+const Reader = require('xml-reader');
+const reader = Reader.create({stream: true});
+const xml =
+    `<root>
+        <item v=1/>
+        <item v=2/>
+        <item v=3/>
+    </root>`;
+
+reader.on('item', (data) => console.log(data));
+// {name: 'item', type: 'element', value: '', attributes: {v: '1'}, children: []}
+// {name: 'item', type: 'element', value: '', attributes: {v: '2'}, children: []}
+// {name: 'item', type: 'element', value: '', attributes: {v: '3'}, children: []}
+
+reader.on('done', data => console.log(data.children.length));
+// 0
+
+// Note that here we are calling the parser with just one char each time
+xml.split('').forEach(char => reader.parse(char));
+```
 ## To do
 
 - ES5 lib (webpack build)
