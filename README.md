@@ -96,7 +96,7 @@ reader.on('item', (data) => console.log(data));
 // {name: 'item', type: 'element', value: '', attributes: {v: '2'}, children: []}
 // {name: 'item', type: 'element', value: '', attributes: {v: '3'}, children: []}
 
-reader.on('done', data => console.log(data.children.length));
+reader.on('done', (data) => console.log(data.children.length));
 // 0
 
 reader.parse(xml);
@@ -123,10 +123,10 @@ reader.on('item', (data) => console.log(data));
 // {name: 'item', type: 'element', value: '', attributes: {v: '2'}, children: []}
 // {name: 'item', type: 'element', value: '', attributes: {v: '3'}, children: []}
 
-reader.on('done', data => console.log(data.children.length));
+reader.on('done', (data) => console.log(data.children.length));
 // 0
 
-// Note that here we are calling the parser with just one char each time
+// Note that we are calling the parse function providing just one char each time
 xml.split('').forEach(char => reader.parse(char));
 ```
 ## To do
