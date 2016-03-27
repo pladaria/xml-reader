@@ -1,6 +1,6 @@
 # XML Reader
 
-Reads XML documents and emits JS objects with a simple, easy to use structure.
+Reads XML documents and emits JavaScript objects with a simple, easy to use structure.
 
 ## Features
 
