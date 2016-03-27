@@ -20,7 +20,7 @@
   ],
   "dependencies": {
     "eventemitter3": "^1.2.0",
-    "xml-lexer": "0.0.15"
+    "xml-lexer": "0.0.16"
   },
   "devDependencies": {
     "clone": "^1.0.2",
