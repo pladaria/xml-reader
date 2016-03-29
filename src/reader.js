@@ -57,7 +57,7 @@ const create = (options) => {
                 if (options.stream && current.parent === rootNode) {
                     rootNode.children = [];
                     // do not expose parent node in top level nodes
-                    delete current.parent;
+                    current.parent = null;
                 }
                 reader.emit(current.name, current);
                 if (current === rootNode) {
