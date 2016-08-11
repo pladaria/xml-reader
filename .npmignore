@@ -1,2 +1,5 @@
 test
 examples
+src
+.eslintrc
+.babelrc

@@ -131,7 +131,6 @@ xml.split('').forEach(char => reader.parse(char));
 ```
 ## To do
 
-- ES5 lib (webpack build)
 - CDATA, comments, doctype and other tags are ignored
 
 ## License
