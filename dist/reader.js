@@ -96,7 +96,19 @@ var create = function create(options) {
     return reader;
 };
 
+var parseSync = function parseSync(xml) {
+    var done = '<!done>';
+    var reader = create({ doneEvent: done });
+    var res = void 0;
+    reader.on(done, function (ast) {
+        res = ast;
+    });
+    reader.parse(xml);
+    return res;
+};
+
 module.exports = {
+    parseSync: parseSync,
     create: create,
     NodeType: NodeType
 };
