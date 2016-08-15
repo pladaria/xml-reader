@@ -31,6 +31,10 @@ interface XmlNode {
 }
 ```
 
+## Reading results
+
+Check the [`xml-query`](https://github.com/pladaria/xml-query) package! It is very useful to read values from the structures returned by `xml-reader`.
+
 ## Examples
 
 ### Read document (event driven)
