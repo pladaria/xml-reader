@@ -1,4 +1,6 @@
 test
 examples
-.eslintrc
 .gitignore
+src
+.eslintrc
+.babelrc
