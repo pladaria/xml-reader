@@ -144,6 +144,7 @@ xml.split('').forEach(char => reader.parse(char));
 ## To do
 
 - CDATA, comments, doctype and other tags are ignored
+- Prefix emmited tags
 
 ## License
 
