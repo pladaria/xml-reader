@@ -94,7 +94,17 @@ const create = (options) => {
     return reader;
 };
 
+const parseSync = (xml) => {
+    const done = '<!done>'
+    const reader = create({doneEvent: done});
+    let res;
+    reader.on(done, ast => {res = ast});
+    reader.parse(xml);
+    return res;
+};
+
 module.exports = {
+    parseSync,
     create,
     NodeType,
 };

@@ -160,3 +160,18 @@ test('capture by tag name in stream mode', t => {
     })
     assertMany(t, reader, 'item', xml, expected);
 });
+
+test('parse Sync', t => {
+    const xml = '<root/>';
+    const result = Reader.parseSync(xml);
+    const expected = {
+        name: 'root',
+        type: 'element',
+        value: '',
+        parent: null,
+        attributes: {},
+        children: [],
+    };
+    t.deepEqual(result, expected);
+    t.end();
+});
