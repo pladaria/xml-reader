@@ -160,7 +160,7 @@ Default options are:
 {
   stream: false,
   parentNodes: true,
-  tagEventPrefix: 'tag:',
+  tagPrefix: 'tag:',
   doneEvent: 'done',
 }
 ```
