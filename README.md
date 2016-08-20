@@ -25,11 +25,16 @@ interface XmlNode {
     name: string; // element name (empty for text nodes)
     type: string; // node type (element or text), see NodeType constants
     value: string; // value of a text node
-    parent: XmlNode; // reference to parent node (null in root node)
+    parent: XmlNode; // reference to parent node (null in root node or with parent option set to false)
     attributes: {[name: string]: string}; // map of attributes name => value
     children: XmlNode[];  // array of children nodes
 }
 ```
+
+## Breaking changes in version 2
+
+Added the `tagEventPrefix` option with a default value of `'tag:'`. This way we avoid possible name collisions with the `done` event.
+To keep the old behavior, set it to an empty string.
 
 ## Reading results
 
@@ -89,8 +94,7 @@ This mode is only valid for reading complete documents (root node must be closed
 const XmlReader = require('xml-reader');
 
 const xml = '<doc>Hello!</doc>';
-
-const result = XmlReader.parseSync(xml);
+const result = XmlReader.parseSync(xml/*, options*/);
 ```
 
 ### Stream mode
@@ -99,6 +103,7 @@ In stream mode, nodes are removed from root as they are emitted. This way memory
 
 ```javascript
 const XmlReader = require('xml-reader');
+
 const reader = XmlReader.create({stream: true});
 const xml =
     `<root>
@@ -107,7 +112,7 @@ const xml =
         <item v=3/>
     </root>`;
 
-reader.on('item', (data) => console.log(data));
+reader.on('tag:item', (data) => console.log(data));
 // {name: 'item', type: 'element', value: '', attributes: {v: '1'}, children: []}
 // {name: 'item', type: 'element', value: '', attributes: {v: '2'}, children: []}
 // {name: 'item', type: 'element', value: '', attributes: {v: '3'}, children: []}
@@ -126,6 +131,7 @@ Simply feed the parser with the data as it arrives. As you can see, the result i
 
 ```javascript
 const XmlReader = require('xml-reader');
+
 const reader = XmlReader.create({stream: true});
 const xml =
     `<root>
@@ -134,7 +140,7 @@ const xml =
         <item v=3/>
     </root>`;
 
-reader.on('item', (data) => console.log(data));
+reader.on('tag:item', (data) => console.log(data));
 // {name: 'item', type: 'element', value: '', attributes: {v: '1'}, children: []}
 // {name: 'item', type: 'element', value: '', attributes: {v: '2'}, children: []}
 // {name: 'item', type: 'element', value: '', attributes: {v: '3'}, children: []}
@@ -145,6 +151,40 @@ reader.on('done', (data) => console.log(data.children.length));
 // Note that we are calling the parse function providing just one char each time
 xml.split('').forEach(char => reader.parse(char));
 ```
+
+### Options
+
+Default options are:
+
+```javascript
+{
+  stream: false,
+  parentNodes: true,
+  tagEventPrefix: 'tag:',
+  doneEvent: 'done',
+}
+```
+
+#### parentNode (boolean)
+
+If `true` (default), each node of the AST has a `parent` node which point to its parent. If `false` the parent node is always `null`.
+
+#### stream (boolean)
+
+Enable or disable stream mode. In stream mode nodes are removed from root after being emitted. Default `false`.
+Ignored in `parseSync`;
+
+
+#### doneEvent (string)
+
+Default value is `'done'`. This is the name of the event emitted when the root node is closed and the parse is done.
+Ignored in `parseSync`;
+
+### tagEventPrefix (string)
+
+Default value is `'tag:'`. The event driven API emits an event each time a tag is read. Use this option to set a name prefix.
+Ignored in `parseSync`;
+
 ## To do
 
 - CDATA, comments, doctype and other tags are ignored
