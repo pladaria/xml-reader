@@ -9,7 +9,7 @@ var NodeType = {
     text: 'text'
 };
 
-var createNode = function createNode(options) {
+var createNode = function createNode(params) {
     return Object.assign({
         name: '',
         type: NodeType.element,
@@ -17,13 +17,15 @@ var createNode = function createNode(options) {
         parent: null,
         attributes: {},
         children: []
-    }, options);
+    }, params);
 };
 
 var create = function create(options) {
     options = Object.assign({
         stream: false,
-        doneEvent: 'done'
+        parentNodes: true,
+        doneEvent: 'done',
+        tagPrefix: 'tag:'
     }, options);
 
     var lexer = Lexer.create();
@@ -52,6 +54,9 @@ var create = function create(options) {
 
             case Type.closeTag:
                 var parent = current.parent;
+                if (!options.parentNodes) {
+                    current.parent = null;
+                }
                 if (current.name !== data.value) {
                     // ignore unexpected closing tag
                     break;
@@ -61,7 +66,7 @@ var create = function create(options) {
                     // do not expose parent node in top level nodes
                     current.parent = null;
                 }
-                reader.emit(current.name, current);
+                reader.emit(options.tagPrefix + current.name, current);
                 if (current === rootNode) {
                     // end of document, stop listening
                     lexer.removeAllListeners('data');
@@ -96,11 +101,11 @@ var create = function create(options) {
     return reader;
 };
 
-var parseSync = function parseSync(xml) {
-    var done = '<!done>';
-    var reader = create({ doneEvent: done });
+var parseSync = function parseSync(xml, options) {
+    options = Object.assign({}, options, { stream: false, tagPrefix: ':' });
+    var reader = create(options);
     var res = void 0;
-    reader.on(done, function (ast) {
+    reader.on('done', function (ast) {
         res = ast;
     });
     reader.parse(xml);
