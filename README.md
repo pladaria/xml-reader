@@ -188,7 +188,6 @@ Ignored in `parseSync`;
 ## To do
 
 - CDATA, comments, doctype and other tags are ignored
-- Prefix emmited tags
 
 ## License
 
