@@ -175,3 +175,54 @@ test('parse Sync', t => {
     t.deepEqual(result, expected);
     t.end();
 });
+
+test('with parent nodes', t => {
+    const xml = '<root><level1><level2></level2></level1></root>';
+    const reader = Reader.create({parentNodes: true});
+    reader.on('tag:level1', (tag) => {
+        t.equal(tag.parent.name, 'root');
+    });
+    reader.on('tag:level2', (tag) => {
+        t.equal(tag.parent.name, 'level1');
+    });
+    reader.on('done', (tag) => {
+        t.pass('done');
+    });
+    reader.parse(xml);
+    t.plan(3);
+    t.end();
+});
+
+test('without parent nodes', t => {
+    const xml = '<root><level1><level2></level2></level1></root>';
+    const reader = Reader.create({parentNodes: false});
+    reader.on('tag:level1', (tag) => {
+        t.equal(tag.parent, null);
+    });
+    reader.on('tag:level2', (tag) => {
+        t.equal(tag.parent, null);
+    });
+    reader.on('done', (tag) => {
+        t.pass('done');
+    });
+    reader.parse(xml);
+    t.plan(3);
+    t.end();
+});
+
+test('custom tag event prefix', t => {
+    const xml = '<root><level1><level2></level2></level1></root>';
+    const reader = Reader.create({tagPrefix: '$'});
+    reader.on('$level1', (tag) => {
+        t.pass('level1');
+    });
+    reader.on('$level2', (tag) => {
+        t.pass('level2');
+    });
+    reader.on('done', (tag) => {
+        t.pass('done');
+    });
+    reader.parse(xml);
+    t.plan(3);
+    t.end();
+});

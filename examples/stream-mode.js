@@ -8,7 +8,7 @@ const xml =
         <item v=3/>
     </root>`;
 
-reader.on('item', (data) => console.log(data));
+reader.on('tag:item', (data) => console.log(data));
 // {name: 'item', type: 'element', value: '', attributes: {v: '1'}, children: []}
 // {name: 'item', type: 'element', value: '', attributes: {v: '2'}, children: []}
 // {name: 'item', type: 'element', value: '', attributes: {v: '3'}, children: []}
