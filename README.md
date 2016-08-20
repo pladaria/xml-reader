@@ -33,7 +33,7 @@ interface XmlNode {
 
 ## Breaking changes in version 2
 
-Added the `tagEventPrefix` option with a default value of `'tag:'`. This way we avoid possible name collisions with the `done` event.
+Added the `tagPrefix` option with a default value of `'tag:'`. This way we avoid possible name collisions with the `done` event.
 To keep the old behavior, set it to an empty string.
 
 ## Reading results
@@ -180,7 +180,7 @@ Ignored in `parseSync`;
 Default value is `'done'`. This is the name of the event emitted when the root node is closed and the parse is done.
 Ignored in `parseSync`;
 
-### tagEventPrefix (string)
+### tagPrefix (string)
 
 Default value is `'tag:'`. The event driven API emits an event each time a tag is read. Use this option to set a name prefix.
 Ignored in `parseSync`;
