@@ -18,14 +18,14 @@ npm install --save xml-reader
 
 ## Node structure
 
-The objects emitted by the reader are trees where each node has the following structure:
+Objects emitted by the reader are trees where each node has the following structure:
 
 ```typescript
 interface XmlNode {
     name: string; // element name (empty for text nodes)
     type: string; // node type (element or text), see NodeType constants
     value: string; // value of a text node
-    parent: XmlNode; // reference to parent node (null in root node or with parent option set to false)
+    parent: XmlNode; // reference to parent node (null with parentNodes option disabled or root node)
     attributes: {[name: string]: string}; // map of attributes name => value
     children: XmlNode[];  // array of children nodes
 }
