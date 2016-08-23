@@ -180,7 +180,7 @@ Ignored in `parseSync`;
 Default value is `'done'`. This is the name of the event emitted when the root node is closed and the parse is done.
 Ignored in `parseSync`;
 
-### tagPrefix (string)
+#### tagPrefix (string)
 
 Default value is `'tag:'`. The event driven API emits an event each time a tag is read. Use this option to set a name prefix.
 Ignored in `parseSync`;
