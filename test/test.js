@@ -2,7 +2,7 @@
 
 const test = require('tape');
 const clone = require('clone');
-const Reader = require('../');
+const Reader = require('../src/reader.js');
 
 /**
  * Returns true if all parent properties effectively
@@ -104,12 +104,13 @@ test('alternative done event', t => {
 test('some tags ignored', t => {
     const reader = Reader.create();
     const xml = `
+        ignored text start
         <?xml foo=bar?>
         <!DOCTYPE baz>
         <root>
-            <![CDATA[]]>
             <!-- comment -->
-        </root>`;
+        </root>
+        ignored text end`;
     const expected = {
         name: 'root',
         type: 'element',
@@ -224,5 +225,17 @@ test('custom tag event prefix', t => {
     });
     reader.parse(xml);
     t.plan(3);
+    t.end();
+});
+
+test('read CDATA texts', t => {
+    const xml = '<root><hi><![CDATA[<hello>]]></hi></root>';
+    const reader = Reader.create({tagPrefix: '$'});
+    reader.on('$hi', (tag) => {
+        t.is(tag.children.length, 1);
+        t.is(tag.children[0].value, '<hello>');
+    });
+    reader.parse(xml);
+    t.plan(2);
     t.end();
 });

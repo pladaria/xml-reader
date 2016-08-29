@@ -25,10 +25,11 @@ var create = function create(options) {
         stream: false,
         parentNodes: true,
         doneEvent: 'done',
-        tagPrefix: 'tag:'
+        tagPrefix: 'tag:',
+        debug: false
     }, options);
 
-    var lexer = Lexer.create();
+    var lexer = Lexer.create({ debug: options.debug });
     var reader = new EventEmitter();
 
     var rootNode = createNode();
@@ -77,11 +78,13 @@ var create = function create(options) {
                 break;
 
             case Type.text:
-                current.children.push(createNode({
-                    type: NodeType.text,
-                    value: data.value,
-                    parent: current
-                }));
+                if (current) {
+                    current.children.push(createNode({
+                        type: NodeType.text,
+                        value: data.value,
+                        parent: current
+                    }));
+                }
                 break;
 
             case Type.attributeName:

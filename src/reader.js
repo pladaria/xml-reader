@@ -24,9 +24,10 @@ const create = (options) => {
         parentNodes: true,
         doneEvent: 'done',
         tagPrefix: 'tag:',
+        debug: false,
     }, options);
 
-    const lexer = Lexer.create();
+    const lexer = Lexer.create({debug: options.debug});
     const reader = new EventEmitter();
 
     let rootNode = createNode();
@@ -75,11 +76,13 @@ const create = (options) => {
                 break;
 
             case Type.text:
-                current.children.push(createNode({
-                    type: NodeType.text,
-                    value: data.value,
-                    parent: current,
-                }));
+                if (current) {
+                    current.children.push(createNode({
+                        type: NodeType.text,
+                        value: data.value,
+                        parent: current,
+                    }));
+                }
                 break;
 
             case Type.attributeName:

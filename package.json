@@ -25,7 +25,7 @@
   ],
   "dependencies": {
     "eventemitter3": "^1.2.0",
-    "xml-lexer": "^0.1.0"
+    "xml-lexer": "^0.2.1"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
