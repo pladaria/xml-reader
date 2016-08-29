@@ -9,6 +9,7 @@ Reads XML documents and emits JavaScript objects with a simple, easy to use stru
 - Event driven and synchronous API
 - Can process input piece-by-piece in a serial fashion
 - Stream mode (low memory usage)
+- Reads CDATA sections
 
 ## Install
 
@@ -184,10 +185,6 @@ Ignored in `parseSync`;
 
 Default value is `'tag:'`. The event driven API emits an event each time a tag is read. Use this option to set a name prefix.
 Ignored in `parseSync`;
-
-## To do
-
-- CDATA, comments, doctype and other tags are ignored
 
 ## License
 
