@@ -68,6 +68,7 @@ var create = function create(options) {
                     current.parent = null;
                 }
                 reader.emit(options.tagPrefix + current.name, current);
+                reader.emit('tag', current.name, current);
                 if (current === rootNode) {
                     // end of document, stop listening
                     lexer.removeAllListeners('data');

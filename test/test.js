@@ -223,8 +223,16 @@ test('custom tag event prefix', t => {
     reader.on('done', (tag) => {
         t.pass('done');
     });
+    reader.on('tag', (name, tag) => {
+        switch (name) {
+            case 'root': return t.pass('root');
+            case 'level1': return t.pass('level1');
+            case 'level2': return t.pass('level2');
+            default: t.fail(`unexpeded tag: ${name}`);
+        }
+    });
     reader.parse(xml);
-    t.plan(3);
+    t.plan(6);
     t.end();
 });
 

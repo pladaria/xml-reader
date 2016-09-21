@@ -124,6 +124,12 @@ reader.on('done', (data) => console.log(data.children.length));
 reader.parse(xml);
 ```
 
+You can also listen to all tags:
+
+```javascript
+reader.on('tag', (name, data) => console.log(`received a ${name} tag:`, data));
+```
+
 ### Stream mode (chunked)
 
 In this example we are calling multiple times to the parser. This is useful if your XML document is a stream that comes from a TCP socket or WebSocket (for example XMPP streams).
