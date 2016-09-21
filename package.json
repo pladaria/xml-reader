@@ -1,6 +1,6 @@
 {
   "name": "xml-reader",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "XML Reader and Parser",
   "main": "dist/reader.js",
   "scripts": {
