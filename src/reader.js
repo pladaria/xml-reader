@@ -24,6 +24,7 @@ const create = (options) => {
         parentNodes: true,
         doneEvent: 'done',
         tagPrefix: 'tag:',
+        emitTopLevelOnly: false, // @todo document
         debug: false,
     }, options);
 
@@ -60,13 +61,15 @@ const create = (options) => {
                     // ignore unexpected closing tag
                     break;
                 }
-                if (options.stream && current.parent === rootNode) {
+                if (options.stream && parent === rootNode) {
                     rootNode.children = [];
                     // do not expose parent node in top level nodes
                     current.parent = null;
                 }
-                reader.emit(options.tagPrefix + current.name, current);
-                reader.emit('tag', current.name, current);
+                if (!options.emitTopLevelOnly || parent === rootNode) {
+                    reader.emit(options.tagPrefix + current.name, current);
+                    reader.emit('tag', current.name, current);
+                }
                 if (current === rootNode) {
                     // end of document, stop listening
                     lexer.removeAllListeners('data');
