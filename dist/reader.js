@@ -26,18 +26,18 @@ var create = function create(options) {
         parentNodes: true,
         doneEvent: 'done',
         tagPrefix: 'tag:',
-        emitTopLevelOnly: false, // @todo document
+        emitTopLevelOnly: false,
         debug: false
     }, options);
 
-    var lexer = Lexer.create({ debug: options.debug });
+    var lexer = void 0,
+        rootNode = void 0,
+        current = void 0,
+        attrName = void 0;
+
     var reader = new EventEmitter();
 
-    var rootNode = createNode();
-    var current = null;
-    var attrName = '';
-
-    lexer.on('data', function (data) {
+    var handleLexerData = function handleLexerData(data) {
         switch (data.type) {
 
             case Type.openTag:
@@ -99,12 +99,19 @@ var create = function create(options) {
             case Type.attributeValue:
                 current.attributes[attrName] = data.value;
                 break;
-
-            default:
-                break;
         }
-    });
-    reader.parse = lexer.write;
+    };
+
+    reader.reset = function () {
+        lexer = Lexer.create({ debug: options.debug });
+        lexer.on('data', handleLexerData);
+        rootNode = createNode();
+        current = null;
+        attrName = '';
+        reader.parse = lexer.write;
+    };
+
+    reader.reset();
     return reader;
 };
 

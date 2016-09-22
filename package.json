@@ -5,7 +5,7 @@
   "main": "dist/reader.js",
   "scripts": {
     "build": "babel src --out-dir dist",
-    "prepublish": "npm test",
+    "prepublish": "npm test && npm build",
     "prebuild": "npm run clean",
     "clean": "rimraf dist",
     "test": "nyc ava --verbose test/test.js",
