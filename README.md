@@ -230,7 +230,7 @@ For example, given the following XML stream:
   </message>
 ```
 
-tags emitted with `emitTopLevelOnly=false`:
+tags emitted with `emitTopLevelOnly=false`
 ```text
 body
 date
@@ -240,11 +240,10 @@ date
 message
 ```
 
-tags emitted with `emitTopLevelOnly=true`:
+tags emitted with `emitTopLevelOnly=true`
 
 ```text
 message
-
 message
 ```
 
