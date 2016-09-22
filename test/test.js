@@ -1,6 +1,6 @@
 'use strict';
 
-const test = require('tape');
+const test = require('ava');
 const clone = require('clone');
 const Reader = require('../src/reader.js');
 
@@ -26,7 +26,7 @@ const removeParents = obj => {
 
 const assert = (t, reader, event, xml, expected) => {
     reader.on(event, (data) => {
-        t.ok(checkParents(data, null), 'parents ok');
+        t.true(checkParents(data, null), 'parents ok');
         const result = removeParents(data);
         t.deepEqual(result, expected, 'result ok');
         t.end();
@@ -44,7 +44,7 @@ const assertMany = (t, reader, event, xml, expected) => {
     reader.parse(xml);
 };
 
-test('element with text node', t => {
+test.cb('element with text node', t => {
     const reader = Reader.create();
     const xml = `<root><item>hello</item></root>`;
     const expected = {
@@ -69,7 +69,7 @@ test('element with text node', t => {
     assert(t, reader, 'done', xml, expected);
 });
 
-test('element with attributes', t => {
+test.cb('element with attributes', t => {
     const reader = Reader.create();
     const xml = `<root><item a=1 b='2'c="3"d/></root>`;
     const expected = {
@@ -88,7 +88,7 @@ test('element with attributes', t => {
     assert(t, reader, 'done', xml, expected);
 });
 
-test('alternative done event', t => {
+test.cb('alternative done event', t => {
     const reader = Reader.create({doneEvent: 'end'});
     const xml = `<done/>`;
     const expected = {
@@ -101,7 +101,7 @@ test('alternative done event', t => {
     assert(t, reader, 'end', xml, expected);
 });
 
-test('some tags ignored', t => {
+test.cb('some tags ignored', t => {
     const reader = Reader.create();
     const xml = `
         ignored text start
@@ -121,7 +121,7 @@ test('some tags ignored', t => {
     assert(t, reader, 'done', xml, expected);
 });
 
-test('capture by tag name', t => {
+test.cb('capture by tag name', t => {
     const reader = Reader.create();
     const xml = `
         <root>
@@ -135,14 +135,14 @@ test('capture by tag name', t => {
         {name: 'item', type: 'element', value: '', attributes: {v: '3'}, children: []},
     ];
     reader.on('done', data => {
-        t.equal(data.children.length, 3, 'root node has expected number of children');
+        t.is(data.children.length, 3, 'root node has expected number of children');
         t.end();
     })
     assertMany(t, reader, 'item', xml, expected);
 });
 
 
-test('capture by tag name in stream mode', t => {
+test.cb('capture by tag name in stream mode', t => {
     const reader = Reader.create({stream: true});
     const xml = `
         <root>
@@ -156,13 +156,13 @@ test('capture by tag name in stream mode', t => {
         {name: 'item', type: 'element', value: '', attributes: {v: '3'}, children: []},
     ];
     reader.on('done', data => {
-        t.equal(data.children.length, 0, 'root node has 0 children');
+        t.is(data.children.length, 0, 'root node has 0 children');
         t.end();
     })
     assertMany(t, reader, 'item', xml, expected);
 });
 
-test('parse Sync', t => {
+test.cb('parse Sync', t => {
     const xml = '<root/>';
     const result = Reader.parseSync(xml);
     const expected = {
@@ -177,14 +177,14 @@ test('parse Sync', t => {
     t.end();
 });
 
-test('with parent nodes', t => {
+test.cb('with parent nodes', t => {
     const xml = '<root><level1><level2></level2></level1></root>';
     const reader = Reader.create({parentNodes: true});
     reader.on('tag:level1', (tag) => {
-        t.equal(tag.parent.name, 'root');
+        t.is(tag.parent.name, 'root');
     });
     reader.on('tag:level2', (tag) => {
-        t.equal(tag.parent.name, 'level1');
+        t.is(tag.parent.name, 'level1');
     });
     reader.on('done', (tag) => {
         t.pass('done');
@@ -194,14 +194,14 @@ test('with parent nodes', t => {
     t.end();
 });
 
-test('without parent nodes', t => {
+test.cb('without parent nodes', t => {
     const xml = '<root><level1><level2></level2></level1></root>';
     const reader = Reader.create({parentNodes: false});
     reader.on('tag:level1', (tag) => {
-        t.equal(tag.parent, null);
+        t.is(tag.parent, null);
     });
     reader.on('tag:level2', (tag) => {
-        t.equal(tag.parent, null);
+        t.is(tag.parent, null);
     });
     reader.on('done', (tag) => {
         t.pass('done');
@@ -211,7 +211,7 @@ test('without parent nodes', t => {
     t.end();
 });
 
-test('custom tag event prefix', t => {
+test.cb('custom tag event prefix', t => {
     const xml = '<root><level1><level2></level2></level1></root>';
     const reader = Reader.create({tagPrefix: '$'});
     reader.on('$level1', (tag) => {
@@ -228,7 +228,7 @@ test('custom tag event prefix', t => {
             case 'root': return t.pass('root');
             case 'level1': return t.pass('level1');
             case 'level2': return t.pass('level2');
-            default: t.fail(`unexpeded tag: ${name}`);
+            default: t.fail(`unexpected tag: ${name}`);
         }
     });
     reader.parse(xml);
@@ -236,7 +236,7 @@ test('custom tag event prefix', t => {
     t.end();
 });
 
-test('read CDATA texts', t => {
+test.cb('read CDATA texts', t => {
     const xml = '<root><hi><![CDATA[<hello>]]></hi></root>';
     const reader = Reader.create({tagPrefix: '$'});
     reader.on('$hi', (tag) => {
@@ -245,5 +245,66 @@ test('read CDATA texts', t => {
     });
     reader.parse(xml);
     t.plan(2);
+    t.end();
+});
+
+test.cb('unexpected closing tags are ignored', t => {
+    const xml = '<root><hi></discarded>hello</hi></root>';
+    const reader = Reader.create();
+    reader.on('tag:hi', (tag) => {
+        t.is(tag.children.length, 1);
+        t.is(tag.children[0].value, 'hello');
+    });
+    reader.on('tag:root', (tag) => t.pass('root'));
+    reader.on('tag:discarded', (tag) => t.fail('discarded'));
+    reader.parse(xml);
+    t.plan(3);
+    t.end();
+});
+
+test.cb('emitTopLevelOnly true', t => {
+    const xml = '<root><level1><level2>2</level2></level1><level1><level2>2</level2></level1></root>';
+    const reader = Reader.create({emitTopLevelOnly: true});
+    reader.on('tag:level1', (tag) => t.pass('level1'));
+    reader.on('tag', (name, tag) => (name === 'level1') && t.pass('level1'));
+
+    reader.on('tag:level2', (tag) => t.fail('level2'));
+    reader.on('tag', (name, tag) => (name === 'level2') && t.fail('level2'));
+    reader.parse(xml);
+    t.plan(4);
+    t.end();
+});
+
+test.cb('emitTopLevelOnly false', t => {
+    const xml = '<root><level1><level2>2</level2></level1><level1><level2>2</level2></level1></root>';
+    const reader = Reader.create({emitTopLevelOnly: false});
+    reader.on('tag:level1', (tag) => t.pass('level1'));
+    reader.on('tag:level2', (tag) => t.pass('level2'));
+    reader.parse(xml);
+    t.plan(4);
+    t.end();
+});
+
+
+test.cb('stops emitting when document ends', t => {
+    const xml = '<root><level1><level2>2</level2></level1></root>';
+    const reader = Reader.create();
+    reader.on('tag:level1', (tag) => t.pass('level1'));
+    reader.on('tag:level2', (tag) => t.pass('level2'));
+    reader.parse(xml);
+    reader.parse(xml);
+    t.plan(2);
+    t.end();
+});
+
+test.cb('resetting allows parsing multiple documents', t => {
+    const xml = '<root><level1><level2>2</level2></level1></root>';
+    const reader = Reader.create();
+    reader.on('tag:level1', (tag) => t.pass('level1'));
+    reader.on('tag:level2', (tag) => t.pass('level2'));
+    reader.parse(xml);
+    reader.reset();
+    reader.parse(xml);
+    t.plan(4);
     t.end();
 });
