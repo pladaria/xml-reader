@@ -191,7 +191,7 @@ Default options are:
 }
 ```
 
-#### parentNode (boolean)
+#### parentNodes (boolean)
 
 If `true` (default), each node of the AST has a `parent` node which point to its parent. If `false` the parent node is always `null`.
 
