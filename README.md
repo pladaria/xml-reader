@@ -159,6 +159,24 @@ reader.on('done', (data) => console.log(data.children.length));
 xml.split('').forEach(char => reader.parse(char));
 ```
 
+### Reset
+
+Use the `reset()` method to reset the reader. This is useful if a stream gets interrupted and you want to start a new one or to use the same reader instance to parse multiple documents (just reset the reader between them).
+
+Example:
+```javascript
+const doc1 = '<document>...</document>';
+const doc2 = '<document>...</document>';
+
+reader.parse(doc1);
+
+// when the document ends, the reader stops emitting events
+reader.reset();
+
+// now you can parse a new document
+reader.parse(doc2);
+```
+
 ### Options
 
 Default options are:
@@ -169,6 +187,7 @@ Default options are:
   parentNodes: true,
   tagPrefix: 'tag:',
   doneEvent: 'done',
+  emitTopLevelOnly: false,
 }
 ```
 
@@ -191,6 +210,43 @@ Ignored in `parseSync`;
 
 Default value is `'tag:'`. The event driven API emits an event each time a tag is read. Use this option to set a name prefix.
 Ignored in `parseSync`;
+
+#### emitTopLevelOnly (boolean)
+
+Default value is `false`. When true, tag events are only emitted by top level nodes (direct children from root). This is useful for XMPP streams like XMPP where each top level child is a stanza.
+
+For example, given the following XML stream:
+
+```xml
+<stream>
+  <message from="alice" to="bob">
+    <body>hello</body>
+    <date>2016-10-06</date>
+  </message>
+
+  <message from="alice" to="bob">
+    <body>bye</body>
+    <date>2016-10-07</date>
+  </message>
+```
+
+tags emitted with `emitTopLevelOnly=false`:
+```text
+body
+date
+message
+body
+date
+message
+```
+
+tags emitted with `emitTopLevelOnly=true`:
+
+```text
+message
+
+message
+```
 
 ## License
 
