@@ -24,18 +24,15 @@ const create = (options) => {
         parentNodes: true,
         doneEvent: 'done',
         tagPrefix: 'tag:',
-        emitTopLevelOnly: false, // @todo document
+        emitTopLevelOnly: false,
         debug: false,
     }, options);
 
-    const lexer = Lexer.create({debug: options.debug});
+    let lexer, rootNode, current, attrName;
+
     const reader = new EventEmitter();
 
-    let rootNode = createNode();
-    let current = null;
-    let attrName = '';
-
-    lexer.on('data', (data) => {
+    const handleLexerData = (data) => {
         switch (data.type) {
 
             case Type.openTag:
@@ -97,12 +94,19 @@ const create = (options) => {
             case Type.attributeValue:
                 current.attributes[attrName] = data.value;
                 break;
-
-            default:
-                break;
         }
-    });
-    reader.parse = lexer.write;
+    };
+
+    reader.reset = () => {
+        lexer = Lexer.create({debug: options.debug});
+        lexer.on('data', handleLexerData);
+        rootNode = createNode();
+        current = null;
+        attrName = '';
+        reader.parse = lexer.write;
+    };
+
+    reader.reset();
     return reader;
 };
 
