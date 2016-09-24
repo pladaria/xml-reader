@@ -27,7 +27,7 @@
   ],
   "dependencies": {
     "eventemitter3": "^2.0.0",
-    "xml-lexer": "^0.2.1"
+    "xml-lexer": "^0.2.2"
   },
   "devDependencies": {
     "ava": "^0.16.0",
