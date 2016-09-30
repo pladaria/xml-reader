@@ -81,7 +81,7 @@ const create = (options) => {
                     current.children.push(createNode({
                         type: NodeType.text,
                         value: data.value,
-                        parent: current,
+                        parent: options.parentNodes ? current : null
                     }));
                 }
                 break;

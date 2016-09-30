@@ -178,7 +178,7 @@ test.cb('parse Sync', t => {
 });
 
 test.cb('with parent nodes', t => {
-    const xml = '<root><level1><level2></level2></level1></root>';
+    const xml = '<root>test<level1><level2></level2></level1></root>';
     const reader = Reader.create({parentNodes: true});
     reader.on('tag:level1', (tag) => {
         t.is(tag.parent.name, 'root');
@@ -187,15 +187,16 @@ test.cb('with parent nodes', t => {
         t.is(tag.parent.name, 'level1');
     });
     reader.on('done', (tag) => {
+        t.is(tag.children[0].parent.name, 'root');
         t.pass('done');
     });
     reader.parse(xml);
-    t.plan(3);
+    t.plan(4);
     t.end();
 });
 
 test.cb('without parent nodes', t => {
-    const xml = '<root><level1><level2></level2></level1></root>';
+    const xml = '<root>test<level1><level2></level2></level1></root>';
     const reader = Reader.create({parentNodes: false});
     reader.on('tag:level1', (tag) => {
         t.is(tag.parent, null);
@@ -204,10 +205,11 @@ test.cb('without parent nodes', t => {
         t.is(tag.parent, null);
     });
     reader.on('done', (tag) => {
+        t.is(tag.children[0].parent, null);
         t.pass('done');
     });
     reader.parse(xml);
-    t.plan(3);
+    t.plan(4);
     t.end();
 });
 
