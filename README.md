@@ -1,6 +1,13 @@
-# XML Reader  [![Build Status](https://travis-ci.org/pladaria/xml-reader.svg)](https://travis-ci.org/pladaria/xml-reader) [![Coverage Status](https://coveralls.io/repos/github/pladaria/xml-reader/badge.svg?branch=master)](https://coveralls.io/github/pladaria/xml-reader?branch=master)
-
+<p align="center">
+<img width="90%" src="https://raw.githubusercontent.com/pladaria/xml-reader/master/logo.png" alt="XML-Reader"/>
+</p>
+<p align="center">
 Reads XML documents and emits JavaScript objects with a simple, easy to use structure.
+</p>
+<p align="center">
+<a href="https://travis-ci.org/pladaria/xml-reader"><img src="https://travis-ci.org/pladaria/xml-reader.svg" alt="Build Status"/></a>
+<a href='https://coveralls.io/github/pladaria/xml-reader?branch=master'><img src='https://coveralls.io/repos/github/pladaria/xml-reader/badge.svg?branch=master' alt='Coverage Status' /></a>
+</p>
 
 ## Features
 
@@ -19,27 +26,25 @@ npm install --save xml-reader
 
 ## Node structure
 
-Objects emitted by the reader are trees where each node has the following structure:
+Objects emitted by the reader have the following structure:
 
-```typescript
-interface XmlNode {
-    name: string; // element name (empty for text nodes)
-    type: string; // node type (element or text), see NodeType constants
-    value: string; // value of a text node
-    parent: XmlNode; // reference to parent node (null with parentNodes option disabled or root node)
-    attributes: {[name: string]: string}; // map of attributes name => value
-    children: XmlNode[];  // array of children nodes
-}
+```javascript
+/**
+ * typedef {Object} XmlNode
+ * @property {string} name - element name (empty for text nodes)
+ * @property {string} type - node type ('element' or 'text')
+ * @property {string} value - value of a text node
+ * @property {XmlNode} parent - reference to parent node
+ * @property {Object} attributes -  attributes {name: value, ...}
+ * @property {XmlNode[]} children - array of children nodes
+ */
 ```
 
-## Breaking changes in version 2
+## Related modules
 
-Added the `tagPrefix` option with a default value of `'tag:'`. This way we avoid possible name collisions with the `done` event.
-To keep the old behavior, set it to an empty string.
-
-## Reading results
-
-Check the [`xml-query`](https://github.com/pladaria/xml-query) package! It is very useful to read values from the structures returned by `xml-reader`.
+- [`xml-query`](https://github.com/pladaria/xml-query)
+- [`xml-printer`](https://github.com/pladaria/xml-printer)
+- [`xml-lexer`](https://github.com/pladaria/xml-lexer)
 
 ## Examples
 
