@@ -1,4 +1,4 @@
-# XML Reader
+# XML Reader  [![Build Status](https://travis-ci.org/pladaria/xml-reader.svg)](https://travis-ci.org/pladaria/xml-reader) [![Coverage Status](https://coveralls.io/repos/github/pladaria/xml-reader/badge.svg?branch=master)](https://coveralls.io/github/pladaria/xml-reader?branch=master)
 
 Reads XML documents and emits JavaScript objects with a simple, easy to use structure.
 
