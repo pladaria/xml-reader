@@ -8,7 +8,7 @@
     "prepublish": "npm test && npm build",
     "prebuild": "npm run clean",
     "clean": "rimraf dist",
-    "test": "nyc ava --verbose test/test.js",
+    "test": "nyc --reporter=lcov ava --verbose test/test.js",
     "report": "nyc report --reporter=html && opn coverage/index.html",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
   },
