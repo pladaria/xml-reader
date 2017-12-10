@@ -105,7 +105,7 @@ const result = XmlReader.parseSync(xml/*, options*/);
 
 ### Stream mode
 
-In stream mode, nodes are removed from root as they are emitted. This way memory usage does not increases.
+In stream mode, nodes are removed from root as they are emitted. This way memory usage does not increase.
 
 ```javascript
 const XmlReader = require('xml-reader');
